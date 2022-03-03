@@ -265,7 +265,7 @@ info a:hover{
 .movie2{
   color: white;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  padding-right: 10px;
+  padding: 10px;
 }
 .movie3{
   color: greenyellow;
@@ -340,6 +340,31 @@ info a:hover{
     }
 }
 
+.movietyp{
+  display: flex;
+ 
+  color: rgb(157, 255, 0);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  position:absolute;
+  top: 200px;
+  
+ align-self: center;
+  font-size: 20px;
+  word-break: initial;
+  background-color: rgba(0, 7, 14, 0.788);
+  white-space: break-word;
+word-break: break-all;
+  display: none;
+  transition: all 0.4s ease-in-out;
+  
+}
+
+
+.movie:hover .movietyp{
+  display: block;
+}
+
+
 
 footer{
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -358,4 +383,9 @@ footer{
   align-items: center;
   justify-content: center;
   padding: 10px;
+}
+
+#errors{
+  color: white;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
