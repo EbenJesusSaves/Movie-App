@@ -10,7 +10,10 @@ const overlay = document.querySelector('.Overlay');
 const closeBtn = document.querySelector('#closeOverlay');
 const infoDiv = document.querySelector('.info'),
       homeBtn = document.querySelector('.home'),
-      movie2 = document.querySelector('.movie2')
+      movie2 = document.querySelector('.movie2'),
+      quer = document.querySelector('#query')
+      errors1 =document.querySelector('#errors')
+
      
 
 
@@ -26,7 +29,16 @@ nextBtn.addEventListener('click', () => {
   getMovies();
 });
 
-homeBtn.addEventListener('click',()=>{getMovies();})
+
+//this event listen retuns to the home page and clears the search page and the movies result
+
+homeBtn.addEventListener('click',()=>{
+  errors1.innerHTML = ""
+  
+  getMovies();
+
+  
+})
 
 
 
@@ -69,15 +81,21 @@ searchForm.addEventListener('submit', (e) => {
 
   const searchHeading = document.querySelector('#searchHeading');
   const movieTerm = searchQuery.value;
+ 
+ 
+  
 
   if (movieTerm !== "") {
 
     searchMovie(movieTerm);
     searchHeading.style.display = "block";
+    quer.style.borderColor= "#373b69";
     searchHeading.innerHTML = `Searching For: <span>${movieTerm}</span>`;
+    searchHeading.innerHTML= ""
 
   } else {
-    alert('Enter any keyword..');
+    quer.style.borderColor= "red";
+    
     return false;
   }
 
@@ -87,6 +105,9 @@ searchForm.addEventListener('submit', (e) => {
 
 
 
+  let total = Math.round(movieTerm.movie_count / movieTerm.limit);
+  console.log(total)
+  totalPages.innerHTML = total;
 
 
 
@@ -113,13 +134,17 @@ const searchMovie = (movie) => {
             <h2 class="movie-title" title="${movieInfo.title}">${movieInfo.title_english}</h2>
             <img src="${movieInfo.medium_cover_image}" alt="${movieInfo.title}">
             <input type="hidden" value="${movieInfo.id}">
-            <div>
+            <div class="movie1">
+           <div class="movie2"> ${movieInfo.year}</div>
             <button id="open" class="open">Download Movie </button>
+           
+            <div class="movie2"> ${movieInfo.rating}</div>
             </div>
+            <div class="movietyp"> ${movieInfo.genres}</div>
           </div>
         `;
         });
-
+document.querySelector('.movietyp').textContent.replace(',', '<br/>')
         document.querySelector('#errors').innerHTML = "";
 
       } else {
@@ -159,10 +184,13 @@ const getMovies = () => {
             <h2 class="movie-title" title="${movieInfo.title}">${movieInfo.title_english}</h2>
             <img src="${movieInfo.medium_cover_image}" alt="${movieInfo.title}">
             <input type="hidden" value="${movieInfo.id}">
+            <div class="movietyp"> ${movieInfo.genres}</div>
             <div class="movie1">
-           <div class="movie2"> ${movieInfo.rating}</div>
+           <div class="movie2"> ${movieInfo.year}</div>
             <button id="open" class="open">Download Movie </button>
+            <div class="movie2"> ${movieInfo.rating}</div>
             </div>
+            
           </div>
          
         `;
@@ -177,6 +205,7 @@ const getMovies = () => {
 
     })
     .catch(error => {
+
       console.log(`There is an Error: ${error}`);
     });
 
