@@ -1,18 +1,19 @@
 const resDiv = document.querySelector('#results');
-const nextBtn = document.querySelector('#next');
-const prevBtn = document.querySelector('#prev');
-const totalPages = document.querySelector('#total');
-const pageDisplay = document.querySelector('#page');
-const searchForm = document.querySelector('#search');
-const searchQuery = document.querySelector('#query');
-const openOverlay = document.querySelectorAll('#open');
-const overlay = document.querySelector('.Overlay');
-const closeBtn = document.querySelector('#closeOverlay');
-const infoDiv = document.querySelector('.info'),
-      homeBtn = document.querySelector('.home'),
-      movie2 = document.querySelector('.movie2'),
-      quer = document.querySelector('#query')
-      errors1 =document.querySelector('#errors')
+ nextBtn = document.querySelector('#next'),
+ prevBtn = document.querySelector('#prev'),
+ totalPages = document.querySelector('#total'),
+ pageDisplay = document.querySelector('#page'),
+ searchForm = document.querySelector('#search'),
+ searchQuery = document.querySelector('#query'),
+ openOverlay = document.querySelectorAll('#open'),
+ overlay = document.querySelector('.Overlay'),
+ closeBtn = document.querySelector('#closeOverlay'),
+ infoDiv = document.querySelector('.info'),
+homeBtn = document.querySelector('.home'),
+movie2 = document.querySelector('.movie2'),
+quer = document.querySelector('#query')
+errors1 =document.querySelector('#errors'),
+loadM = document.querySelector('#loadM')
 
      
 
@@ -21,28 +22,25 @@ const infoDiv = document.querySelector('.info'),
 
 
 let current_page = 1;
+let searchPage = 1
 pageDisplay.innerHTML = current_page;
+
+
+//This even listener listens to the click on the current button and increase the page by 1
 
 nextBtn.addEventListener('click', () => {
   current_page++;
+  
   pageDisplay.innerHTML = current_page;
   getMovies();
 });
 
-
-//this event listen retuns to the home page and clears the search page and the movies result
-
-homeBtn.addEventListener('click',()=>{
-  errors1.innerHTML = ""
+loadM.addEventListener('click',()=>{
+  searchPage ++
   
-  getMovies();
-
+movieSearcher()
   
 })
-
-
-
-
 
 prevBtn.addEventListener('click', () => {
   current_page--;
@@ -56,25 +54,36 @@ prevBtn.addEventListener('click', () => {
 
   getMovies();
 })
+//this event listen retuns to the home page and clears the search page and the movies result
 
 
+  
+
+
+
+
+
+
+//this reloads the function getmovies when you refresh the windows 
 
 window.onload = () => {
   getMovies();
+  
 }
 
 
+//this checks to see if the user has a valid internet connection before loading the get movies function
 
 window.addEventListener('online', () => {
   getMovies();
 });
-
+// this event listener shows no internet connection when the users is online or connected to the internet 
 window.addEventListener('offline', () => {
-  resDiv.innerHTML = "No internet connection, check your wifi or cable and try again";
+  resDiv.innerHTML = "No internet connection, check your wifi or cable and try again😉😉";
 });
 
 //this fuction is for the seaching of the movies 
-
+function movieSearcher(){
 searchForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const pagination = document.querySelector('#pagination');
@@ -82,26 +91,27 @@ searchForm.addEventListener('submit', (e) => {
   const searchHeading = document.querySelector('#searchHeading');
   const movieTerm = searchQuery.value;
  
+ //if search value is not equal to empty stringg then serachMovies (function) takes the value in the movieterm and puts it in the seracheading by using the variable movieterm
  
+
+ if (movieTerm !== "") {
+
+  searchMovie(movieTerm);
+  searchHeading.style.display = "block";
+
+  searchHeading.innerHTML = `Searching For: <span>${movieTerm}</span>`;
+  searchHeading.innerHTML= ""
+  quer.style.borderColor= "#373b69";
   
 
-  if (movieTerm !== "") {
+} else {
+  quer.style.borderColor= "red";
+  return false;
+} 
 
-    searchMovie(movieTerm);
-    searchHeading.style.display = "block";
-    quer.style.borderColor= "#373b69";
-    searchHeading.innerHTML = `Searching For: <span>${movieTerm}</span>`;
-    searchHeading.innerHTML= ""
-
-  } else {
-    quer.style.borderColor= "red";
-    
-    return false;
-  }
-
-  pagination.style.display = "none";
-  prevBtn.style.display = "none";
-  nextBtn.style.display = "none";
+pagination.style.display = "none";
+prevBtn.style.display = "none";
+ nextBtn.style.display = "none";
 
 
 
@@ -113,19 +123,25 @@ searchForm.addEventListener('submit', (e) => {
 
 });
 
-
+//this function takes a parameter called movieterm which is the value from the search term to loop through the movie arrays to fetch movies with the same names 
 
 const searchMovie = (movie) => {
 
-  fetch(`https://yts.mx/api/v2/list_movies.json?query_term=${movie}`)
+  fetch(`https://yts.mx/api/v2/list_movies.json?limit=50&&query_term=${movie}&&page=${searchPage}`)
     .then(response => {
       return response.json();
     })
+
+    //so  fetch method retuns json of arrays then cont called movieObj takes the moviedata from the api and store it as movieObj
     .then(movieData => {
       const movieObj = movieData.data;
       let Output = '';
       let total = Math.round(movieObj.movie_count / movieObj.limit);
       totalPages.innerHTML = total;
+
+//this if statement checks if the total movies are not equal to zero, if it returns teue it then loop true each movie and dispaly the results according the html which is easy to undertand and i won't write commment because I have to write plenty to explain something simple 🤣🤣🤣!!
+
+
       if (movieObj.movie_count !== 0) {
 
         movieObj.movies.forEach(movieInfo => {
@@ -144,7 +160,7 @@ const searchMovie = (movie) => {
           </div>
         `;
         });
-document.querySelector('.movietyp').textContent.replace(',', '<br/>')
+// if no movie is fund with the search keyword the error id then return no movie found or returns empy string when a movie is fund 
         document.querySelector('#errors').innerHTML = "";
 
       } else {
@@ -162,10 +178,12 @@ document.querySelector('.movietyp').textContent.replace(',', '<br/>')
     });
 
 }
+}
 
+movieSearcher()
 const getMovies = () => {
 
-  fetch(`https://yts.mx/api/v2/list_movies.json?page=${current_page}`)
+  fetch(`https://yts.mx/api/v2/list_movies.json?limit=50&&page=${current_page}`)
     .then(response => {
       return response.json();
     })
@@ -278,4 +296,18 @@ const getMovieById = (id) => {
     });
 
 
+}
+let map = new Map ()
+
+map.set('name', 'how are you doing ')
+map.set('age', 'I am 25 years old')
+
+
+for (let k of map.keys()){
+  console.log(k)
+}
+
+
+for (let [y, m] of map.entries()){
+ console.log( `the key is ${y} and the values are ${m}`)
 }
